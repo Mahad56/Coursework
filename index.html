@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bias-Free Platform</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <!-- Navigation Bar -->
+    <nav>
+        <h1>Bias-Free Platform</h1>
+        <ul>
+            <li><a href="#" onclick="showPage('dashboard')">Dashboard</a></li>
+            <li><a href="#" onclick="showPage('opposing-views')">Opposing Views</a></li>
+        </ul>
+    </nav>
+
+    <!-- Dashboard Page -->
+    <section id="dashboard" class="page active">
+        <h2>For You / Dashboard</h2>
+        <div class="content-box">
+            <p>Personalized content and recommendations will be displayed here.</p>
+        </div>
+    </section>
+
+    <!-- Opposing Views Page -->
+    <section id="opposing-views" class="page">
+        <h2>Opposing Views</h2>
+        <input type="text" placeholder="Search topics..." class="search-bar">
+        <div class="content-box">
+            <p>Different perspectives on the selected topic will appear here.</p>
+        </div>
+    </section>
+
+    <!-- Hamburger Icon -->
+    <div class="hamburger" onclick="toggleMenu()">☰</div>
+
+    <!-- Sidebar Menu -->
+    <div id="sidebar-menu" class="sidebar">
+        <ul>
+            <li><a href="#" onclick="showPage('dashboard')">Home</a></li>
+            <li><a href="#">Popular</a></li>
+            <li><a href="#">Recent</a></li>
+            <li><a href="#">Trending</a></li>
+            <li><a href="#">Explore</a></li>
+        </ul>
+    </div>
+
+    <!--Dark Mode-->
+    <button onclick="toggleDarkMode()">Toggle Dark Mode</button>
+
+
+    <script src="script.js"></script>
+
+</body>
+</html>

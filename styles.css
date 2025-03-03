@@ -1,0 +1,117 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+}
+
+nav {
+    background: #672d7a;
+    padding: 15px;
+    color: white;
+    text-align: center;
+}
+
+nav ul {
+    list-style: none;
+    padding: 0;
+}
+
+nav ul li {
+    display: inline;
+    margin: 0 20px;
+}
+
+nav ul li a {
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.page {
+    display: none;
+    padding: 20px;
+    background: white;
+    margin: 20px auto;
+    width: 80%;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.active {
+    display: block;
+}
+
+.content-box {
+    height: 200px;
+    overflow-y: scroll;
+    background: #ddd;
+    padding: 15px;
+    border-radius: 5px;
+}
+
+.search-bar {
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+
+body.dark-mode {
+    background-color: #222;
+    color: white;
+}
+.dark-mode .content-box {
+    background: #444;
+}
+
+
+
+/* Hamburger Menu Button */
+.hamburger {
+    position: fixed;
+    top: 15px;
+    left: 15px;
+    font-size: 30px;
+    cursor: pointer;
+    z-index: 200;
+    color: white;
+}
+
+/* Sidebar Menu */
+.sidebar {
+    position: fixed;
+    left: -250px;
+    top: 0;
+    width: 250px;
+    height: 100%;
+    background: #672d7a;
+    transition: left 0.3s ease;
+    padding-top: 60px;
+}
+
+.sidebar ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.sidebar ul li {
+    padding: 15px;
+}
+
+.sidebar ul li a {
+    color: white;
+    text-decoration: none;
+    display: block;
+    font-size: 18px;
+    transition: background 0.3s;
+}
+
+.sidebar ul li a:hover {
+    background: #874b9a;
+}
+
+/* Sidebar Active State */
+.sidebar.active {
+    left: 0;
+}
