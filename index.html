@@ -23,6 +23,21 @@
         <div class="content-box">
             <p>Personalized content and recommendations will be displayed here.</p>
         </div>
+
+        <!-- Example Post with Like/Dislike -->
+        <div class="post">
+            <p>This is a filler post. What do you think?</p>
+            <button class="like-btn" onclick="likePost(this)">👍 Like (<span>0</span>)</button>
+            <button class="dislike-btn" onclick="dislikePost(this)">👎 Dislike (<span>0</span>)</button>
+        </div>
+
+        <!-- Comment Section -->
+        <div class="comment-section">
+            <h3>Comments:</h3>
+            <div class="comments"></div>
+            <textarea id="comment-input" placeholder="Write a comment..."></textarea>
+            <button onclick="addComment()">Post Comment</button>
+        </div>
     </section>
 
     <!-- Opposing Views Page -->
@@ -41,16 +56,15 @@
     <div id="sidebar-menu" class="sidebar">
         <ul>
             <li><a href="#" onclick="showPage('dashboard')">Home</a></li>
-            <li><a href="#">Popular</a></li>
+            <li><a href="#">Popular</a></li>   
             <li><a href="#">Recent</a></li>
             <li><a href="#">Trending</a></li>
             <li><a href="#">Explore</a></li>
         </ul>
     </div>
 
-    <!--Dark Mode-->
-    <button onclick="toggleDarkMode()">Toggle Dark Mode</button>
-
+    <!-- Dark Mode Toggle -->
+    <button class="dark-mode-toggle" onclick="toggleDarkMode()">Toggle Dark Mode</button>
 
     <script src="script.js"></script>
 

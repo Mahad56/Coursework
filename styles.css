@@ -6,7 +6,7 @@ body {
 }
 
 nav {
-    background: #672d7a;
+    background: #7a6ebf;
     padding: 15px;
     color: white;
     text-align: center;
@@ -55,18 +55,16 @@ nav ul li a {
     margin-bottom: 10px;
 }
 
-
 body.dark-mode {
     background-color: #222;
     color: white;
 }
+
 .dark-mode .content-box {
     background: #444;
 }
 
-
-
-/* Hamburger Menu Button */
+/* Hamburger Menu */
 .hamburger {
     position: fixed;
     top: 15px;
@@ -84,9 +82,12 @@ body.dark-mode {
     top: 0;
     width: 250px;
     height: 100%;
-    background: #672d7a;
+    background: #7a6ebf;
     transition: left 0.3s ease;
     padding-top: 60px;
+}
+.sidebar.active {
+    left: 0;
 }
 
 .sidebar ul {
@@ -111,7 +112,53 @@ body.dark-mode {
     background: #874b9a;
 }
 
-/* Sidebar Active State */
-.sidebar.active {
-    left: 0;
+
+/* Like and Dislike Buttons */
+.like-btn, .dislike-btn {
+    background: #fff;
+    border: 1px solid #ccc;
+    padding: 8px 12px;
+    margin: 5px;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+.like-btn:hover {
+    background: #90ee90;
+}
+
+.dislike-btn:hover {
+    background: #ffcccb;
+}
+
+/* Comment Section */
+.comment-section {
+    margin-top: 20px;
+    padding: 10px;
+    background: #f9f9f9;
+    border-radius: 5px;
+}
+
+textarea {
+    width: 100%;
+    height: 50px;
+    padding: 8px;
+    margin-top: 5px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+button {
+    background: #672d7a;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    margin-top: 5px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+button:hover {
+    background: #874b9a;
 }
