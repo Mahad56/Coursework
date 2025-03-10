@@ -1,0 +1,1 @@
+"web: gunicorn coursework.wsgi --log-file -" 

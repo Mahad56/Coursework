@@ -20,24 +20,18 @@
 
     <!-- Dashboard Page -->
     <section id="dashboard" class="page active">
+        <h2>Welcome, {{ user.username }}!</h2>
         <h2>For You / Dashboard</h2>
-        <div class="content-box">
-            <p>Personalized content and recommendations will be displayed here.</p>
+
+        <!-- Post Form -->
+        <div class="post-form">
+            <textarea id="post-input" placeholder="What's happening?" rows="3"></textarea>
+            <button id="post-button">Post</button>
         </div>
 
-        <!-- Example Post with Like/Dislike -->
-        <div class="post">
-            <p>This is a filler post. What do you think?</p>
-            <button class="like-btn" onclick="likePost(this)">👍 Like (<span>0</span>)</button>
-            <button class="dislike-btn" onclick="dislikePost(this)">👎 Dislike (<span>0</span>)</button>
-        </div>
-
-        <!-- Comment Section -->
-        <div class="comment-section">
-            <h3>Comments:</h3>
-            <div class="comments"></div>
-            <textarea id="comment-input" placeholder="Write a comment..."></textarea>
-            <button onclick="addComment()">Post Comment</button>
+        <!-- Posts Container -->
+         <div id="posts-container" class="posts-container">
+        <!-- Posts will be dynamically added here -->
         </div>
     </section>
 
@@ -65,9 +59,12 @@
     </div>
 
     <!-- Dark Mode Toggle -->
-    <button class="dark-mode-toggle" onclick="toggleDarkMode()">Toggle Dark Mode</button>
+    <button class="dark-mode-toggle">Toggle Dark Mode</button>
 
     <script src="{% static 'js/script.js' %}"></script>
-
+    <script type="text/javascript">
+        var currentUser = "{{ user.username }}";
+    </script>
+    
 </body>
 </html>

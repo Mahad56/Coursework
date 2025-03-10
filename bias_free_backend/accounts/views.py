@@ -5,6 +5,8 @@ from django.contrib import messages
 from django.core.exceptions import ValidationError
 from .models import CustomUser 
 import re
+from django.contrib.auth.decorators import login_required
+
 
 def login_view(request):
     if request.method == 'POST':
@@ -74,3 +76,11 @@ def home_view(request):
 
 def index_view(request):
     return render(request, "index.html") 
+
+def post_list(request):
+    posts = Post.objects.all() 
+    return render(request, 'posts/posts_list.html', {'posts': posts})
+
+@login_required
+def dashboard(request):
+    return render(request, 'index.html', {'current_user': request.user})

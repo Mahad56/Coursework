@@ -1,8 +1,9 @@
 from django.core.management.base import BaseCommand
-from accounts.models import CustomUser 
+from accounts.models import CustomUser
+from posts.models import Post 
 
 class Command(BaseCommand):
-    help = 'Create 5 dummy user accounts'
+    help = 'Create 5 dummy user accounts with posts'
 
     def handle(self, *args, **kwargs):
         users = [
@@ -20,4 +21,12 @@ class Command(BaseCommand):
                 email=user_data["email"]
             )
             user.save()
-            self.stdout.write(self.style.SUCCESS(f"Successfully created user {user.username}"))
+
+            # Create a dummy post for each user
+            post = Post.objects.create(
+                user=user,
+                content=f"This is a dummy post from {user.username}.",
+            )
+            post.save()
+
+            self.stdout.write(self.style.SUCCESS(f"Successfully created user {user.username} and post"))

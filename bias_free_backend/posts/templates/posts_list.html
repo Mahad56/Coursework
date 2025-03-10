@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Posts</title>
+</head>
+<body>
+    <h1>Posts</h1>
+    <ul>
+        {% for post in posts %}
+            <div class="post">
+                <div class="post-header">
+                    <span class="username">{{ post.user.username }}</span>  <!-- User's name -->
+                    <span class="post-id">#{{ post.id }}</span>  <!-- Post ID -->
+                </div>
+                <div class="post-content">
+                    {{ post.content }}
+                </div>
+                <div class="post-footer">
+                    Posted on: {{ post.created_at }}
+                </div>
+            </div>
+        {% endfor %}
+    </ul>
+</body>
+</html>
