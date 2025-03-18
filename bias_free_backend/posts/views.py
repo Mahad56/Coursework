@@ -12,7 +12,6 @@ import json
 from django.http import JsonResponse
 from django.db.models import Prefetch
 
-
 def post_list(request):
     # Use prefetch_related to reduce database queries
     posts = Post.objects.prefetch_related('comments', 'liked_by', 'disliked_by').all()  # Adjust to your model relations
@@ -117,37 +116,6 @@ def create_comment(request, post_id):
         return JsonResponse({'error': 'You already liked this post.'}, status=400)
     return JsonResponse({'error': 'Invalid request method.'}, status=405)
 
-@login_required
-@csrf_exempt
-def create_comment(request, post_id):
-    if request.method == 'POST':
-        try:
-            data = json.loads(request.body)
-            content = data.get('content')
-
-            if not content:
-                return JsonResponse({'error': 'Comment content is required.'}, status=400)
-
-            post = Post.objects.get(id=post_id)
-
-            comment = Comment.objects.create(
-                content=content,
-                post=post,
-                user=request.user
-            )
-
-            return JsonResponse({
-                'comment_id': comment.id,
-                'user': comment.user.username,
-                'content': comment.content,
-            }, status=201)
-
-        except Post.DoesNotExist:
-            return JsonResponse({'error': 'Post not found'}, status=404)
-        except Exception as e:
-            return JsonResponse({'error': str(e)}, status=500)
-    return JsonResponse({'error': 'Invalid request method'}, status=405)
-
 @csrf_exempt
 def like_post(request, post_id):
     if request.method == "POST":
@@ -160,6 +128,109 @@ def like_post(request, post_id):
 
         return JsonResponse({'message': 'Post liked successfully', 'likes': post.liked_by.count()})
     return JsonResponse({'error': 'Invalid request method'}, status=405)
+
+@csrf_exempt
+def dislike_post(request, post_id):
+    if request.method == "POST":
+        post = get_object_or_404(Post, id=post_id)
+
+        # Check if the user already disliked the post
+        if request.user in post.disliked_by.all():
+            post.disliked_by.remove(request.user)  # Remove the dislike
+            user_action = 'none'
+        else:
+            post.disliked_by.add(request.user)  # Add the dislike
+            post.liked_by.remove(request.user)  # Remove like if previously liked
+            user_action = 'dislike'
+
+        post.save()
+        return JsonResponse({
+            'message': 'Post dislike status updated',
+            'likes': post.liked_by.count(),
+            'dislikes': post.disliked_by.count(),
+            'user_action': user_action
+        })
+
+    return JsonResponse({'error': 'Invalid request method'}, status=405)
+
+def get_posts(request):
+    """
+    This view retrieves all posts and their associated comments, 
+    and returns them as a JSON response.
+    """
+    # Prefetch comments related to posts to reduce database queries
+    posts = Post.objects.prefetch_related(
+        Prefetch('comments', queryset=Comment.objects.all())
+    ).order_by('-created_at')  # Adjust to your model
+
+    posts_data = []
+
+    # Iterate through the posts and fetch associated comments
+    for post in posts:
+        post_data = {
+            'id': post.id,
+            'uuid': post.uuid,
+            'content': post.content,
+            'user': post.user.username,
+            'created_at': post.created_at.isoformat(),
+            'likes': post.liked_by.count(),
+            'dislikes': post.disliked_by.count(),
+            'comments': [
+                {
+                    'id': comment.id,
+                    'content': comment.content,
+                    'user': comment.user.username,
+                    'created_at': comment.created_at.isoformat(),
+                }
+                for comment in post.comments.all()
+            ]
+        }
+        posts_data.append(post_data)
+
+    return JsonResponse({'posts': posts_data})
+
+def raw_sql_query(request):
+    
+    # Connect to the SQLite database
+    db_path = settings.BASE_DIR / "db.sqlite3"  # Use BASE_DIR to refer to the DB file
+
+    # Execute raw SQL query
+    conn = sqlite3.connect(db_path)
+    query = """
+    SELECT p.id AS post_id, u.username, p.content, p.created_at 
+    FROM posts_post p 
+    JOIN accounts_customuser u ON p.user_id = u.id
+    """
+    df = pd.read_sql_query(query, conn)
+
+    # Convert DataFrame to a list of dictionaries
+    posts = df.to_dict(orient='records')
+
+    # Close the connection
+    conn.close()
+
+    # Render the template with the posts data
+    return render(request, 'posts/posts_list.html', {'posts': posts})
+
+
+
+
+    if request.method == 'POST':
+        post = get_object_or_404(Post, id=post_id)
+        if request.user in post.disliked_by.all():
+            post.disliked_by.remove(request.user)
+            post.save()
+            return JsonResponse({'message': 'Dislike removed successfully.', 'dislikes': post.dislikes_count})
+        return JsonResponse({'error': 'You have not disliked this post.'}, status=400)
+    return JsonResponse({'error': 'Invalid request method.'}, status=405)
+    if request.method == 'POST':
+        post = get_object_or_404(Post, id=post_id)
+        if request.user in post.disliked_by.all():  # Assuming a many-to-many field for dislikes
+            post.disliked_by.remove(request.user)
+            post.save()
+            return JsonResponse({'message': 'Dislike removed successfully.', 'dislikes': post.disliked_by.count()})
+        return JsonResponse({'error': 'You have not disliked this post.'}, status=400)
+    return JsonResponse({'error': 'Invalid request method.'}, status=405)
 
 @csrf_exempt
 def dislike_post(request, post_id):
@@ -271,4 +342,70 @@ def raw_sql_query(request):
             post.save()
             return JsonResponse({'message': 'Dislike removed successfully.', 'dislikes': post.disliked_by.count()})
         return JsonResponse({'error': 'You have not disliked this post.'}, status=400)
+    return JsonResponse({'error': 'Invalid request method.'}, status=405)
+
+@csrf_exempt
+@login_required
+def remove_like_post(request, post_id):
+    """
+    Toggles the like status for a post.
+    If the user has already liked the post, the like is removed.
+    Otherwise, a like is added.
+    """
+    if request.method == 'POST':
+        post = get_object_or_404(Post, id=post_id)
+
+        if request.user in post.liked_by.all():
+            # If the user has already liked, remove the like
+            post.liked_by.remove(request.user)
+            user_action = 'none'  # Indicate no reaction
+        else:
+            # If the user hasn't liked, add the like and remove any existing dislike
+            post.liked_by.add(request.user)
+            post.disliked_by.remove(request.user)  # Remove the dislike if it exists
+            user_action = 'like'
+
+        post.save()
+
+        # Return updated counts
+        return JsonResponse({
+            'message': 'Like status updated.',
+            'likes': post.liked_by.count(),
+            'dislikes': post.disliked_by.count(),
+            'user_action': user_action  # Returning current user action
+        })
+
+    return JsonResponse({'error': 'Invalid request method.'}, status=405)
+
+@csrf_exempt
+@login_required
+def remove_dislike_post(request, post_id):
+    """
+    Toggles the dislike status for a post.
+    If the user has already disliked the post, the dislike is removed.
+    Otherwise, a dislike is added.
+    """
+    if request.method == 'POST':
+        post = get_object_or_404(Post, id=post_id)
+
+        if request.user in post.disliked_by.all():
+            # If the user has already disliked, remove the dislike
+            post.disliked_by.remove(request.user)
+            user_action = 'none'  # Indicate no reaction
+        else:
+            # If the user hasn't disliked, add the dislike and remove any existing like
+            post.disliked_by.add(request.user)
+            post.liked_by.remove(request.user)  # Remove the like if it exists
+            user_action = 'dislike'
+
+        post.save()
+
+        # Return updated counts
+        return JsonResponse({
+            'message': 'Dislike status updated.',
+            'likes': post.liked_by.count(),
+            'dislikes': post.disliked_by.count(),
+            'user_action': user_action  # Returning current user action
+        })
+
     return JsonResponse({'error': 'Invalid request method.'}, status=405)

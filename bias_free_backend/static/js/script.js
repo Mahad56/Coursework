@@ -37,7 +37,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
     loadPosts();
 });
-
 function getCsrfToken() {
     const cookies = document.cookie.split(';');
     for (let i = 0; i < cookies.length; i++) {
@@ -48,16 +47,13 @@ function getCsrfToken() {
     }
     return '';
 }
-
 function toggleMenu() {
     const sidebar = document.getElementById('sidebar-menu');
     sidebar.classList.toggle('active');
 }
-
 function toggleDarkMode() {
     document.body.classList.toggle('dark-mode');
 }
-
 function showPage(pageId) {
     const pages = document.querySelectorAll('.page');
     pages.forEach(page => page.classList.remove('active'));
@@ -67,7 +63,6 @@ function showPage(pageId) {
         activePage.classList.add('active');
     }
 }
-
 async function addPost(event) {
     event.preventDefault();
     const postInput = document.getElementById('post-input');
@@ -109,7 +104,6 @@ async function addPost(event) {
         alert('An error occurred. Please try again later.');
     }
 }
-
 async function loadPosts() {
     try {
         const response = await fetch('/posts/get-posts/');
@@ -127,7 +121,6 @@ async function loadPosts() {
         console.error('Error fetching posts:', error);
     }
 }
-
 function addPostToDOM(post, preload = false) {
     const postsContainer = document.getElementById('posts-container');
 
@@ -185,7 +178,6 @@ function addPostToDOM(post, preload = false) {
 
     postsContainer.appendChild(postElement);
 }
-
 function commentPost(button) {
     const postBox = button.closest('.post-box');
     const postId = postBox.dataset.postId;
@@ -224,7 +216,6 @@ function commentPost(button) {
         postBox.appendChild(inputContainer);
     }
 }
-
 async function addComment(commentSection, commentText, postId) {
     try {
         const response = await fetch(`/posts/comment/${postId}/`, {
@@ -252,6 +243,129 @@ async function addComment(commentSection, commentText, postId) {
                 <p>${data.content}</p>
             `;
             commentSection.appendChild(commentElement);
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        alert('An error occurred. Please try again later.');
+    }
+}
+function likePost(button) {
+    const postActions = button.closest('.post-actions');
+    const dislikeButton = postActions.querySelector('.dislike-btn');
+    const postId = button.dataset.postId;
+
+    // Check if the button was already liked
+    if (button.classList.contains('active')) {
+        // Remove like
+        button.classList.remove('active');
+        const likeCountElement = button.querySelector('span');
+        let likeCount = parseInt(likeCountElement.textContent);
+        likeCountElement.textContent = likeCount - 1;
+
+        // Send remove-like request to the backend
+        updateLikeStatus(postId, 'remove-like');
+        return;
+    }
+
+    // If the dislike button was active, remove dislike
+    if (dislikeButton.classList.contains('active')) {
+        dislikeButton.classList.remove('active');
+        const dislikeCountElement = dislikeButton.querySelector('span');
+        let dislikeCount = parseInt(dislikeCountElement.textContent);
+        dislikeCountElement.textContent = dislikeCount - 1;
+
+        // Send remove-dislike request to the backend
+        updateLikeStatus(postId, 'remove-dislike');
+    }
+
+    // Add like
+    button.classList.add('active');
+    const likeCountElement = button.querySelector('span');
+    let likeCount = parseInt(likeCountElement.textContent);
+    likeCountElement.textContent = likeCount + 1;
+
+    // Send like request to the backend
+    updateLikeStatus(postId, 'like');
+}
+// Function to handle "Dislike" button click
+function dislikePost(button) {
+    const postActions = button.closest('.post-actions');
+    const likeButton = postActions.querySelector('.like-btn');
+    const postId = button.dataset.postId;
+
+    // Check if the button was already disliked
+    if (button.classList.contains('active')) {
+        // Remove dislike
+        button.classList.remove('active');
+        const dislikeCountElement = button.querySelector('span');
+        let dislikeCount = parseInt(dislikeCountElement.textContent);
+        dislikeCountElement.textContent = dislikeCount - 1;
+
+        // Send remove-dislike request to the backend
+        updateLikeStatus(postId, 'remove-dislike');
+        return;
+    }
+
+    // If the like button was active, remove like
+    if (likeButton.classList.contains('active')) {
+        likeButton.classList.remove('active');
+        const likeCountElement = likeButton.querySelector('span');
+        let likeCount = parseInt(likeCountElement.textContent);
+        likeCountElement.textContent = likeCount - 1;
+
+        // Send remove-like request to the backend
+        updateLikeStatus(postId, 'remove-like');
+    }
+
+    // Add dislike
+    button.classList.add('active');
+    const dislikeCountElement = button.querySelector('span');
+    let dislikeCount = parseInt(dislikeCountElement.textContent);
+    dislikeCountElement.textContent = dislikeCount + 1;
+
+    // Send dislike request to the backend
+    updateLikeStatus(postId, 'dislike');
+}
+// Function to send like/dislike updates to the backend
+async function updateLikeStatus(postId, action) {
+    const csrfToken = getCsrfToken();
+
+    let url = '';
+    if (action === 'like') {
+        url = `/posts/like/${postId}/`;
+    } else if (action === 'remove-like') {
+        url = `/posts/remove-like/${postId}/`;
+    } else if (action === 'dislike') {
+        url = `/posts/dislike/${postId}/`;
+    } else if (action === 'remove-dislike') {
+        url = `/posts/remove-dislike/${postId}/`;
+    }
+
+    try {
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrfToken,
+            },
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            console.error('Error:', errorData.error);
+            alert('Error: ' + errorData.error);
+        } else {
+            const data = await response.json();
+            console.log('Post updated:', data.message);
+
+            const postBox = document.querySelector(`[data-post-id="${postId}"]`);
+            if (postBox) {
+                const likeCount = postBox.querySelector('.like-btn span');
+                const dislikeCount = postBox.querySelector('.dislike-btn span');
+
+                if (likeCount) likeCount.textContent = data.likes;
+                if (dislikeCount) dislikeCount.textContent = data.dislikes;
+            }
         }
     } catch (error) {
         console.error('Error:', error);
