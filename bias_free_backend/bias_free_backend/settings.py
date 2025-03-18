@@ -133,9 +133,7 @@ STATIC_URL = "static/"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
-STATIC_ROOT = r"C:\Users\sindi\Documents\comp2\Coursework\bias_free_backend\staticfiles"
-STATICFILES_DIRS = [
-    ('', r"C:\Users\sindi\Documents\comp2\Coursework\bias_free_backend\static"), 
-]
+STATIC_ROOT =  BASE_DIR / "staticfiles"
+STATICFILES_DIRS = [BASE_DIR / "static",]
 django_heroku.settings(locals())
 

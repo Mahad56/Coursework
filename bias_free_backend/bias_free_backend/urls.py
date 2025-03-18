@@ -19,12 +19,15 @@ from django.contrib import admin
 from django.urls import path, include
 from accounts import views
 from django.views.generic import TemplateView
+from posts import views as post_views  # Add this import for post_views
+from django.http import HttpResponse
 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('accounts.urls')),
-    path('posts/', include('posts.urls')),
-    path('', views.signup_view, name='home'),
+    path('posts/', include('posts.urls')),  # Ensure this points to the posts app
+    path('', views.signup_view, name='home'),  # Home page that uses the signup view
+    path('create/', post_views.create_post, name='create_post'),  # Create post view
+    path('favicon.ico', lambda x: HttpResponse(status=204)),
 ]
-

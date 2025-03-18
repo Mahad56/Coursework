@@ -25,10 +25,13 @@
 
         <!-- Post Form -->
         <div class="post-form">
-            <textarea id="post-input" placeholder="What's happening?" rows="3"></textarea>
-            <button id="post-button">Post</button>
+            <form method="POST">
+                {% csrf_token %}
+                <textarea name="post-input" id="post-input" placeholder="What's happening?" rows="3"></textarea>
+                <button type="submit" id="post-button">Post</button>
+            </form>
         </div>
-
+        
         <!-- Posts Container -->
          <div id="posts-container" class="posts-container">
         <!-- Posts will be dynamically added here -->

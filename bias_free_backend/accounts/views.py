@@ -5,8 +5,11 @@ from django.contrib import messages
 from django.core.exceptions import ValidationError
 from .models import CustomUser 
 import re
+import pandas as pd
 from django.contrib.auth.decorators import login_required
-
+import sqlite3
+from django.conf import settings
+from posts.models import Post
 
 def login_view(request):
     if request.method == 'POST':
@@ -29,8 +32,8 @@ def login_view(request):
             return redirect('login')  
 
     else:
-        return render(request, 'accounts/login.html')  
-    
+        return render(request, 'accounts/login.html') 
+        
 def validate_password(password):
     if len(password) < 8:
         raise ValidationError("Password must be at least 8 characters long.")
@@ -44,7 +47,6 @@ def validate_password(password):
     special_characters = "!@#$%^&*()-_=+<>?"
     if not any(char in special_characters for char in password):
         raise ValidationError("Password must contain at least one special character.")
-
 
 def signup_view(request):
     if request.method == 'POST':
@@ -69,15 +71,34 @@ def signup_view(request):
 
     return render(request, 'accounts/home.html', {'form': form})  
 
-
 def home_view(request):
     return render(request, 'accounts/home.html')  
-
 
 def index_view(request):
     return render(request, "index.html") 
 
-def post_list(request):
+def write_to_db(request):
+    # Create a DataFrame (for example, new posts data)
+    new_posts_df = pd.DataFrame({
+        'content': ['New Post 1', 'New Post 2'],
+        'user_id': [1, 2]  # Assuming user IDs
+    })
+
+    # Connect to the SQLite database
+    conn = sqlite3.connect(BASE_DIR / 'db.sqlite3')
+
+    # Write the DataFrame to the 'posts_post' table (you can choose to append or replace)
+    new_posts_df.to_sql('posts_post', conn, if_exists='append', index=False)
+
+    # Close the connection
+    conn.close()
+
+    return render(request, 'posts/post_success.html')
+
+
+
+    return render(request, "index.html") 
+
     posts = Post.objects.all() 
     return render(request, 'posts/posts_list.html', {'posts': posts})
 

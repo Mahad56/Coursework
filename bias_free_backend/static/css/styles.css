@@ -141,7 +141,22 @@ h2 {
 .sidebar ul li a:hover {
     background: #874b9a;
 }
-
+.comment-input-field{
+    color: #333;
+    background-color: white;
+}
+.dark-mode .comment-input-field {
+    color: white;
+    background-color: black;
+}
+.comment-input-container{
+    color: #333;
+    background-color: white;
+}
+.dark-mode .comment-input-container {
+    color: white;
+    background-color: black;
+}
 /* Post Form and Post Button */
 .post-form {
     margin-bottom: 20px;
@@ -153,6 +168,9 @@ h2 {
 textarea {
     color: black;  /* Text color for normal mode */
     background-color: white;  /* Background color for normal mode */
+    resize: vertical    ;
+    margin-left: -10px;
+    min-height: 20px;
 }
 
 /* Dark mode textarea style */
@@ -204,17 +222,26 @@ body.dark-mode .posts-container {
 }
 
 /* Post Box Styling */
+/* Post Box Styling */
 .post {
     position: relative;
     background: #fff;
     border: 1px solid #ddd;
-    padding: 15px;
+    padding: 20px; /* Add padding for inner spacing */
     margin-bottom: 15px;
     border-radius: 8px;
-    box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15); /* Add shadow for a floating effect */
     word-wrap: break-word; /* Ensures the text wraps inside the container */
     word-break: break-word; /* Breaks long words if necessary */
 }
+
+/* Dark Mode Post Styling */
+body.dark-mode .post {
+    background-color: #333; /* Dark background for posts in dark mode */
+    border: 1px solid #444; /* Darker border for posts in dark mode */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5); /* Adjusted shadow for dark mode */
+}
+
 
 /* Post Content Styling */
 .post p {
@@ -225,10 +252,6 @@ body.dark-mode .posts-container {
 }
 body.dark-mode .post p {
     color: white;  /* White text color in dark mode */
-}
-body.dark-mode .post {
-    background-color: #333; /* Dark background for posts in dark mode */
-    border: 1px solid #444; /* Darker border for posts in dark mode */
 }
 body.dark-mode .post-form{
     color: black;
@@ -282,10 +305,22 @@ body.dark-mode .comment{
     font-weight: bold;
 }
 
+/* Post ID Styling */
 .post-id {
     position: absolute; /* Position relative to the .post container */
     top: 10px; /* Adjust as needed for distance from the top */
-    right: 2px; /* Adjust as needed for distance from the right edge */
+    left: 10px; /* Adjust as needed for distance from the left edge */
+    font-size: 12px; /* Smaller font size for unobtrusive display */
+    font-weight: normal;
+    color: #888;
+}
+
+/* Comment ID Styling */
+.comment-id {
+    position: absolute; /* Position relative to the .comment container */
+    top: 5px; /* Adjust as needed for distance from the top */
+    left: 5px; /* Adjust as needed for distance from the left edge */
+    font-size: 12px; /* Smaller font size for unobtrusive display */
     font-weight: normal;
     color: #888;
 }
@@ -301,13 +336,6 @@ body.dark-mode .comment{
     font-weight: bold;
 }
 
-.comment-id {
-    position: absolute; /* Position relative to the .post container */
-    top: auto; /* Adjust as needed for distance from the top */
-    right: 30px; /* Adjust as needed for distance from the right edge */
-    font-weight: normal;
-    color: #888;
-}
 /* See Comments Button */
 .see-comments-btn {
     background: #672d7a;

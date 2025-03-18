@@ -1,10 +1,13 @@
+/* General Body Styling */
 body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
     background-color: #f4f4f4;
+    transition: background-color 0.3s ease, color 0.3s ease; /* Smooth transition for dark mode */
 }
 
+/* Navigation Bar */
 nav {
     background: #7a6ebf;
     padding: 15px;
@@ -28,6 +31,7 @@ nav ul li a {
     font-weight: bold;
 }
 
+/* Page Styling */
 .page {
     display: none;
     padding: 20px;
@@ -42,6 +46,7 @@ nav ul li a {
     display: block;
 }
 
+/* Content Box */
 .content-box {
     height: 200px;
     overflow-y: scroll;
@@ -55,9 +60,17 @@ nav ul li a {
     margin-bottom: 10px;
 }
 
+/* Dark Mode */
 body.dark-mode {
     background-color: #222;
     color: white;
+}
+h2 {
+    color: black;  /* Normal mode color */
+}
+/* Dark mode style */
+.dark-mode h2 {
+    color: white;  /* Dark mode color */
 }
 
 .dark-mode .content-box {
@@ -74,11 +87,27 @@ body.dark-mode {
     z-index: 200;
     color: white;
 }
+.dark-mode-toggle {
+    display: block;
+    margin: 20px auto; /* Centers the button horizontally */
+    padding: 10px 20px;
+    background-color: #333;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    text-align: center;
+}
+
+.dark-mode-toggle:hover {
+    background-color: #555;
+}
 
 /* Sidebar Menu */
 .sidebar {
     position: fixed;
-    left: -250px;
+    left: -250px; 
     top: 0;
     width: 250px;
     height: 100%;
@@ -86,8 +115,9 @@ body.dark-mode {
     transition: left 0.3s ease;
     padding-top: 60px;
 }
+
 .sidebar.active {
-    left: 0;
+    left: 0; 
 }
 
 .sidebar ul {
@@ -112,24 +142,221 @@ body.dark-mode {
     background: #874b9a;
 }
 
+/* Post Form and Post Button */
+.post-form {
+    position: fixed;
+    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.845);
+    margin-bottom: 20px;
+}
+.post-form .dark-mode {
+    color: black;
+}
+/* Default textarea style (light mode) */
+textarea {
+    color: black;  /* Text color for normal mode */
+    background-color: white;  /* Background color for normal mode */
+    resize: none;
 
-/* Like and Dislike Buttons */
-.like-btn, .dislike-btn {
+}
+
+/* Dark mode textarea style */
+body.dark-mode textarea {
+    color: white;  /* Text color for dark mode */
+    background-color: #333;  /* Dark background color for dark mode */
+}
+#post-input {
+    width: 100%;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    margin-bottom: 10px;
+    font-size: 14px;
+}
+#post-input .dark-mode{
+    color: black; 
+}
+#post-button {
+    background: #672d7a;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+#post-button:hover {
+    background: #874b9a;
+}
+#dashboard{
+    color: black;
+    background-color: white;
+}
+body.dark-mode #dashboard{
+    background-color: black;
+    color: white;
+}
+/* Posts Container */
+.posts-container {
+    background-color: white;  /* Light background color */
+    color: black;  /* Default text color */
+    padding: 20px;
+}
+body.dark-mode .posts-container {
+    background-color: black;  /* Dark background color for dark mode */
+    color: white;  /* White text color for dark mode */
+}
+
+/* Post Box Styling */
+.post {
+    position: relative;
+    background: #fff;
+    border: 1px solid #ddd;
+    padding: 15px;
+    margin-bottom: 15px;
+    border-radius: 8px;
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+    word-wrap: break-word; /* Ensures the text wraps inside the container */
+    word-break: break-word; /* Breaks long words if necessary */
+}
+
+/* Post Content Styling */
+.post p {
+    color: black;
+    margin: 0;
+    white-space: pre-wrap; /* Ensures that whitespace in the content is preserved */
+    word-wrap: break-word; /* Ensures text wraps within the box */
+}
+body.dark-mode .post p {
+    color: white;  /* White text color in dark mode */
+}
+body.dark-mode .post {
+    background-color: #333; /* Dark background for posts in dark mode */
+    border: 1px solid #444; /* Darker border for posts in dark mode */
+}
+body.dark-mode .post-form{
+    color: black;
+}
+/* Additional Adjustments */
+.post-box {
+    display: flex;
+    flex-direction: column;
+}
+
+.post-actions {
+    margin-top: 10px;
+    display: flex;
+    gap: 10px;
+}
+
+/* Comment Section */
+.comment-section {
+    margin-top: 10px;
+    padding: 10px;
+    background: #f9f9f9;
+    border-radius: 5px;
+    display: none; /* Hide comments initially */
+    color: black;
+}
+body.dark-mode .comment-section{
+    background-color: black;
+    color: white;
+}
+
+/* Individual Comment */
+.comment {
+    padding: 5px;
+    background: #f0f0f0;
+    border-radius: 5px;
+    margin-bottom: 5px;
+}
+body.dark-mode .comment{
+    background-color: black;
+    color: white;
+}
+.post-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 14px;
+    color: #555;
+}
+
+.username {
+    font-weight: bold;
+}
+
+.post-id {
+    position: absolute; /* Position relative to the .post container */
+    top: 10px; /* Adjust as needed for distance from the top */
+    right: 2px; /* Adjust as needed for distance from the right edge */
+    font-weight: normal;
+    color: #888;
+}
+.comment-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 14px;
+    color: #555;
+}
+
+.comment-username {
+    font-weight: bold;
+}
+
+.comment-id {
+    position: absolute; /* Position relative to the .post container */
+    top: auto; /* Adjust as needed for distance from the top */
+    right: 30px; /* Adjust as needed for distance from the right edge */
+    font-weight: normal;
+    color: #888;
+}
+/* See Comments Button */
+.see-comments-btn {
+    background: #672d7a;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    margin-top: 10px;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background 0.3s ease;
+}
+
+.see-comments-btn:hover {
+    background: #874b9a;
+}
+
+.post-actions button {
     background: #fff;
     border: 1px solid #ccc;
     padding: 8px 12px;
     margin: 5px;
-    cursor: pointer;
+    cursor: pointer;    
     border-radius: 5px;
     font-size: 14px;
+    transition: background 0.3s ease;
 }
-
-.like-btn:hover {
+.like-btn{
+    color: black;
+}
+.dislike-btn{
+    color: black;
+}
+.comment-btn{
+    color: black;
+}
+.post-actions .like-btn:hover {
     background: #90ee90;
 }
 
-.dislike-btn:hover {
+.post-actions .dislike-btn:hover {
     background: #ffcccb;
+}
+
+.post-actions .comment-btn:hover {
+    background: #f0f0f0;
 }
 
 /* Comment Section */
@@ -140,6 +367,7 @@ body.dark-mode {
     border-radius: 5px;
 }
 
+/* Textarea Styling */
 textarea {
     width: 100%;
     height: 50px;
@@ -147,8 +375,11 @@ textarea {
     margin-top: 5px;
     border-radius: 5px;
     border: 1px solid #ccc;
+    resize: vertical;
+    box-sizing: border-box;
 }
 
+/* General Button Styling */
 button {
     background: #672d7a;
     color: white;
@@ -157,8 +388,32 @@ button {
     margin-top: 5px;
     cursor: pointer;
     border-radius: 5px;
+    transition: background 0.3s ease;
 }
 
 button:hover {
     background: #874b9a;
+}
+
+/* Dark Mode Button Styles */
+.dark-mode button {
+    background: #3c3c3c;
+}
+
+.dark-mode button:hover {
+    background: #555;
+}
+
+
+.dark-mode .sidebar {
+    background: #333;
+}
+.dark-mode .like-btn{
+    color: white;
+}
+.dark-mode .dislike-btn{
+    color: white;
+}
+.dark-mode .comment-btn{
+    color: white;
 }
