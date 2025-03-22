@@ -1,36 +1,41 @@
-/* General Body Styling */
+/* main body styling */
 body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
-    background-color: #f4f4f4;
+    background: linear-gradient(135deg, #ccc7e8, #cdcdcd);
     transition: background-color 0.3s ease, color 0.3s ease; /* Smooth transition for dark mode */
 }
-
 /* Navigation Bar */
 nav {
-    background: #7a6ebf;
+    background: linear-gradient(135deg, #6a5fb8, #5346a6); /* Gradient for a professional look */
     padding: 15px;
     color: white;
     text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Shadow for depth */
+    border-bottom: 2px solid #4c3e8b; /* Subtle bottom border for a 3D effect */
+    position: relative;
+    z-index: 100; 
 }
-
 nav ul {
     list-style: none;
     padding: 0;
+    margin: 0;
 }
-
 nav ul li {
     display: inline;
     margin: 0 20px;
 }
-
 nav ul li a {
     color: white;
     text-decoration: none;
     font-weight: bold;
+    transition: color 0.3s ease, text-shadow 0.3s ease;
 }
-
+nav ul li a:hover {
+    color: #ffd700; /* Highlight color on hover */
+    text-shadow: 0 0 5px rgba(255, 215, 0, 0.8); /* Glow effect on hover */
+}
 /* Page Styling */
 .page {
     display: none;
@@ -41,42 +46,74 @@ nav ul li a {
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
-
+/*senetiment preference bar styling*/
+.sentiment-bar {
+    display: flex;
+    height: 20px;
+    border-radius: 10px;
+    overflow: hidden;
+}
+.sentiment-section {
+    height: 100%;
+    text-align: center;
+    color: white;
+    font-weight: bold;
+}
+.sentiment-section.positive {
+    background-color: rgb(2, 60, 2);
+}
+.sentiment-section.neutral {
+    background-color: rgb(100, 98, 98);
+}
+.sentiment-section.negative {
+    background-color: rgb(91, 4, 4);
+}
 .active {
     display: block;
 }
-
 /* Content Box */
 .content-box {
-    height: 200px;
-    overflow-y: scroll;
-    background: #ddd;
-    padding: 15px;
+    background-color: white; 
+    color: black;  
+    padding: 20px;
+}
+body.dark-mode .content-box {
+    background-color: black;  
+    color: white;  
+}
+/* Sentiment Bar Container */
+.sentiment-bar-container {
+    margin: 20px 0;
+    background: #f4f4f4;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+}
+/* Sentiment Bar */
+.sentiment-bar {
+    display: flex;
+    height: 30px;
     border-radius: 5px;
+    overflow: hidden;
 }
-
-.search-bar {
-    width: 100%;
-    margin-bottom: 10px;
+/* Each Sentiment Section */
+.sentiment-section {
+    height: 100%;
+    display: inline-block;
 }
-
 /* Dark Mode */
 body.dark-mode {
-    background-color: #222;
+    background: #000000;
     color: white;
 }
 h2 {
-    color: black;  /* Normal mode color */
+    color: black; 
 }
-/* Dark mode style */
 .dark-mode h2 {
-    color: white;  /* Dark mode color */
+    color: white;  
 }
-
 .dark-mode .content-box {
     background: #444;
 }
-
 /* Hamburger Menu */
 .hamburger {
     position: fixed;
@@ -89,7 +126,11 @@ h2 {
 }
 .dark-mode-toggle {
     display: block;
-    margin: 20px auto; /* Centers the button horizontally */
+    position: fixed; 
+    top: 15px; 
+    right: 15px; 
+    z-index: 200;
+    margin: 20px auto; 
     padding: 10px 20px;
     background-color: #333;
     color: #fff;
@@ -98,38 +139,34 @@ h2 {
     cursor: pointer;
     font-size: 16px;
     text-align: center;
+    width: 75px;
 }
-
 .dark-mode-toggle:hover {
     background-color: #555;
 }
-
 /* Sidebar Menu */
 .sidebar {
     position: fixed;
     left: -250px; 
     top: 0;
-    width: 250px;
+    width: 150px;
     height: 100%;
     background: #7a6ebf;
     transition: left 0.3s ease;
     padding-top: 60px;
+    z-index: 110; 
 }
-
 .sidebar.active {
     left: 0; 
 }
-
 .sidebar ul {
     list-style: none;
     padding: 0;
     margin: 0;
 }
-
 .sidebar ul li {
     padding: 15px;
 }
-
 .sidebar ul li a {
     color: white;
     text-decoration: none;
@@ -137,9 +174,16 @@ h2 {
     font-size: 18px;
     transition: background 0.3s;
 }
-
 .sidebar ul li a:hover {
     background: #874b9a;
+}
+body.sidebar-active #dashboard {
+    margin-left: 160px; 
+    transition: margin-left 0.3s ease; 
+}
+body.sidebar-active #opposing-views {
+    margin-left: 160px;  
+    transition: margin-left 0.3s ease; 
 }
 .comment-input-field{
     color: #333;
@@ -160,34 +204,37 @@ h2 {
 /* Post Form and Post Button */
 .post-form {
     margin-bottom: 20px;
+    
 }
 .post-form .dark-mode {
     color: black;
 }
 /* Default textarea style (light mode) */
 textarea {
-    color: black;  /* Text color for normal mode */
-    background-color: white;  /* Background color for normal mode */
+    color: black; 
+    background-color: white; 
     resize: vertical    ;
     margin-left: -10px;
     min-height: 20px;
 }
-
 /* Dark mode textarea style */
 body.dark-mode textarea {
     color: white;  /* Text color for dark mode */
-    background-color: #333;  /* Dark background color for dark mode */
+    background: #333;  /* Dark background color for dark mode */
 }
 #post-input {
     width: 100%;
     padding: 10px;
-    border-radius: 5px;
-    border: 1px solid #ccc;
+    border-radius: 15px;
+    border: 1.5px solid #2e2637;
     margin-bottom: 10px;
     font-size: 14px;
+    background: linear-gradient(135deg, #f0f0f5, #e2e2eb);
+    font-weight:bold;
 }
-#post-input .dark-mode{
-    color: black; 
+body.dark-mode #post-input{
+    background: black;
+    color: white;
 }
 #post-button {
     background: #672d7a;
@@ -202,26 +249,52 @@ body.dark-mode textarea {
 #post-button:hover {
     background: #874b9a;
 }
-#dashboard{
-    color: black;
-    background-color: white;
+#dashboard {
+    background: linear-gradient(135deg, #f0f0f5, #e2e2eb); /* Gradient for a pro look */
+    color: #333; 
+    padding: 20px;
+    margin: 20px auto;
+    border-radius: 10px; /* Rounded corners for a pro look */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Shadow for depth */
+    border: 1px solid #ccc; /* Subtle border for definition */
+    transition: box-shadow 0.3s ease, transform 0.3s ease; /* Smooth hover transition */
+}
+#opposing-views{
+    background: linear-gradient(135deg, #f0f0f5, #e2e2eb); /* Gradient for a sleek appearance */
+    color: #333; 
+    padding: 20px;
+    margin: 20px auto;
+    border-radius: 10px; /* Rounded corners for a modern look */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Shadow for depth */
+    border: 1px solid #ccc; /* Subtle border for definition */
+    transition: box-shadow 0.3s ease, transform 0.3s ease; /* Smooth hover transition */
+}
+h3{
+    text-align: center;
+}
+body.dark-mode #opposing-views{
+    background: rgb(48, 46, 46);
+    color: white;
 }
 body.dark-mode #dashboard{
-    background-color: black;
+    background: rgb(48, 46, 46);
     color: white;
 }
 /* Posts Container */
 .posts-container {
-    background-color: white;  /* Light background color */
-    color: black;  /* Default text color */
+    background: linear-gradient(135deg, #f0f0f5, #e2e2eb);  
+    color: black; 
+    padding: 10px;
+    border-radius: 15px;
+    border: 1.5px solid #2e2637;
     padding: 20px;
+    box-shadow: 10px 20px 10px rgba(0, 0, 0, 0.2);
+    
 }
 body.dark-mode .posts-container {
-    background-color: black;  /* Dark background color for dark mode */
-    color: white;  /* White text color for dark mode */
+    background: black;  
+    color: white;  
 }
-
-/* Post Box Styling */
 /* Post Box Styling */
 .post {
     position: relative;
@@ -230,28 +303,25 @@ body.dark-mode .posts-container {
     padding: 20px; /* Add padding for inner spacing */
     margin-bottom: 15px;
     border-radius: 8px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15); /* Add shadow for a floating effect */
-    word-wrap: break-word; /* Ensures the text wraps inside the container */
-    word-break: break-word; /* Breaks long words if necessary */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+    word-wrap: break-word; 
+    word-break: break-word;
 }
-
 /* Dark Mode Post Styling */
 body.dark-mode .post {
-    background-color: #333; /* Dark background for posts in dark mode */
-    border: 1px solid #444; /* Darker border for posts in dark mode */
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5); /* Adjusted shadow for dark mode */
+    background-color: #333; 
+    border: 1px solid #444; 
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5); 
 }
-
-
 /* Post Content Styling */
 .post p {
     color: black;
     margin: 0;
-    white-space: pre-wrap; /* Ensures that whitespace in the content is preserved */
-    word-wrap: break-word; /* Ensures text wraps within the box */
+    white-space: pre-wrap; 
+    word-wrap: break-word;
 }
 body.dark-mode .post p {
-    color: white;  /* White text color in dark mode */
+    color: white;  
 }
 body.dark-mode .post-form{
     color: black;
@@ -260,37 +330,38 @@ body.dark-mode .post-form{
 .post-box {
     display: flex;
     flex-direction: column;
+    padding: 10px;
+    border-radius: 15px;
+    border: 1.5px solid #2e2637;
 }
-
 .post-actions {
     margin-top: 10px;
     display: flex;
+    background: linear-gradient(135deg, #f0f0f5, #e2e2eb);
     gap: 10px;
 }
-
 /* Comment Section */
 .comment-section {
     margin-top: 10px;
     padding: 10px;
-    background: #f9f9f9;
+    background: linear-gradient(135deg, #f0f0f5, #e2e2eb);
     border-radius: 5px;
     display: none; /* Hide comments initially */
     color: black;
 }
 body.dark-mode .comment-section{
-    background-color: black;
+    background: black;
     color: white;
 }
-
 /* Individual Comment */
 .comment {
-    padding: 5px;
-    background: #f0f0f0;
-    border-radius: 5px;
-    margin-bottom: 5px;
+    padding: 10px;
+    border-radius: 15px;
+    border: 1.5px solid #2e2637;
+    background: linear-gradient(135deg, #f0f0f5, #cbcbd8);
 }
 body.dark-mode .comment{
-    background-color: black;
+    background: black;
     color: white;
 }
 .post-header {
@@ -300,27 +371,24 @@ body.dark-mode .comment{
     font-size: 14px;
     color: #555;
 }
-
 .username {
     font-weight: bold;
 }
-
 /* Post ID Styling */
 .post-id {
-    position: absolute; /* Position relative to the .post container */
-    top: 10px; /* Adjust as needed for distance from the top */
-    left: 10px; /* Adjust as needed for distance from the left edge */
-    font-size: 12px; /* Smaller font size for unobtrusive display */
+    position: absolute; 
+    top: 10px; 
+    left: 10px; 
+    font-size: 12px; 
     font-weight: normal;
     color: #888;
 }
-
 /* Comment ID Styling */
 .comment-id {
-    position: absolute; /* Position relative to the .comment container */
-    top: 5px; /* Adjust as needed for distance from the top */
-    left: 5px; /* Adjust as needed for distance from the left edge */
-    font-size: 12px; /* Smaller font size for unobtrusive display */
+    position: absolute; 
+    top: 5px; 
+    left: 5px; 
+    font-size: 12px; 
     font-weight: normal;
     color: #888;
 }
@@ -331,11 +399,9 @@ body.dark-mode .comment{
     font-size: 14px;
     color: #555;
 }
-
 .comment-username {
     font-weight: bold;
 }
-
 /* See Comments Button */
 .see-comments-btn {
     background: #672d7a;
@@ -347,20 +413,18 @@ body.dark-mode .comment{
     border-radius: 5px;
     transition: background 0.3s ease;
 }
-
 .see-comments-btn:hover {
     background: #874b9a;
 }
-
 .post-actions button {
-    background: #fff;
-    border: 1px solid #ccc;
-    padding: 8px 12px;
     margin: 5px;
     cursor: pointer;    
-    border-radius: 5px;
     font-size: 14px;
     transition: background 0.3s ease;
+    background: linear-gradient(135deg, #f0f0f5, #e2e2eb);
+    padding: 10px;
+    border-radius: 15px;
+    border: 1.5px solid #2e2637;
 }
 .like-btn{
     color: black;
@@ -374,23 +438,19 @@ body.dark-mode .comment{
 .post-actions .like-btn:hover {
     background: #90ee90;
 }
-
 .post-actions .dislike-btn:hover {
     background: #ffcccb;
 }
-
 .post-actions .comment-btn:hover {
     background: #f0f0f0;
 }
-
 /* Comment Section */
 .comment-section {
     margin-top: 20px;
     padding: 10px;
-    background: #f9f9f9;
+    background: linear-gradient(135deg, #f0f0f5, #e2e2eb);
     border-radius: 5px;
 }
-
 /* Textarea Styling */
 textarea {
     width: 100%;
@@ -400,7 +460,6 @@ textarea {
     border-radius: 5px;
     border: 1px solid #ccc;
 }
-
 /* General Button Styling */
 button {
     background: #672d7a;
@@ -412,21 +471,20 @@ button {
     border-radius: 5px;
     transition: background 0.3s ease;
 }
-
 button:hover {
     background: #874b9a;
 }
-
 /* Dark Mode Button Styles */
 .dark-mode button {
     background: #3c3c3c;
 }
-
 .dark-mode button:hover {
     background: #555;
 }
-
-
+.dark-mode .post-actions{
+    background: black;
+    color: white;
+}
 .dark-mode .sidebar {
     background: #333;
 }

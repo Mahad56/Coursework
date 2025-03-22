@@ -11,4 +11,7 @@ urlpatterns = [
     path('remove-dislike/<int:post_id>/', views.remove_dislike_post, name='remove_dislike_post'),
     path('comment/<int:post_id>/', views.create_comment, name='create_comment'),
     path('get-posts/', views.get_posts, name='get_posts'),
+    path('get-sentiment-data/', views.get_sentiment_data, name='get_sentiment_data'),
+    path('get-opposing-posts/<str:sentiment>/', views.get_opposing_sentiment_posts, name='get_opposing_sentiment_posts'),
+    path('get-ordered-posts/<str:order_type>/', views.get_ordered_posts, name='get_ordered_posts'),
 ]

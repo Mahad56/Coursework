@@ -8,6 +8,30 @@
 <body>
     <h1>Posts</h1>
     
+    <!-- Display Sentiment Preferences for each User -->
+    <h2>User Sentiment Preferences</h2>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>User</th>
+                <th>Positive Percentage</th>
+                <th>Negative Percentage</th>
+                <th>Neutral Percentage</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for sentiment in user_sentiments %}
+            <tr>
+                <td>{{ sentiment.user }}</td>
+                <td>{{ sentiment.positive_percentage }}%</td>
+                <td>{{ sentiment.negative_percentage }}%</td>
+                <td>{{ sentiment.neutral_percentage }}%</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <h2>Posts</h2>
     <table border="1">
         <thead>
             <tr>
@@ -17,6 +41,7 @@
                 <th>Timestamp</th>
                 <th>Likes</th>
                 <th>Dislikes</th>
+                <th>Sentiment</th>
                 <th>Comments</th>
             </tr>
         </thead>
@@ -24,11 +49,12 @@
             {% for post in posts %}
             <tr>
                 <td>{{ post.id }}</td>
-                <td>{{ post.user }}</td>
-                <td>{{ post.content }}</td>
-                <td>{{ post.created_at }}</td>
+                <td>{{ post.user }}</td> <!-- Display username -->
+                <td>{{ post.content }}</td><!-- Display post -->
+                <td>{{ post.created_at }}</td><!-- Display post creation time -->
                 <td>{{ post.likes }}</td>  <!-- Display Likes -->
                 <td>{{ post.dislikes }}</td>  <!-- Display Dislikes -->
+                <td>Sentiment Score: {{ post.sentiments}}</td>
                 <td>
                     {% if post.comments %}
                         <ul>

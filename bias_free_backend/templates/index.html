@@ -4,17 +4,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bias-Free Platform</title>
+    <title>Echolize</title>
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
 </head>
 <body>
 
     <!-- Navigation Bar -->
     <nav>
-        <h1>Bias-Free Platform</h1>
+        <h1>Echolize</h1>
         <ul>
-            <li><a href="#" onclick="showPage('dashboard')">Dashboard</a></li>
-            <li><a href="#" onclick="showPage('opposing-views')">Opposing Views</a></li>
+            <li><a href="#" onclick="showPage('dashboard')">Dashboard</a></li><!--main page. will display main posts-->
+            <li><a href="#" onclick="showPage('opposing-views')">Opposing Views</a></li><!--opposing viws page-->
         </ul>
     </nav>
 
@@ -41,9 +41,16 @@
     <!-- Opposing Views Page -->
     <section id="opposing-views" class="page">
         <h2>Opposing Views</h2>
-        <input type="text" placeholder="Search topics..." class="search-bar">
-        <div class="content-box">
-            <p>Different perspectives on the selected topic will appear here.</p>
+        <h3 id="sentiment-bar-header" >Your Preferences</h3>
+        <!-- Sentiment Preferences Bar. will showcase a bar chart of the users sentiment preferences with the width of each colour representing the percentage. -->
+        <div class="sentiment-bar-container">
+            <div id="sentiment-bar" class="sentiment-bar">
+            </div>
+        </div>
+
+        <!-- Posts in Opposing Views -->
+        <div id="opposing-posts-container" class="posts-container">
+            <!-- Posts will be dynamically added here -->
         </div>
     </section>
 
@@ -53,21 +60,21 @@
     <!-- Sidebar Menu -->
     <div id="sidebar-menu" class="sidebar">
         <ul>
-            <li><a href="#" onclick="showPage('dashboard')">Home</a></li>
-            <li><a href="#">Popular</a></li>   
-            <li><a href="#">Recent</a></li>
-            <li><a href="#">Trending</a></li>
-            <li><a href="#">Explore</a></li>
+            <li><a href="#" onclick="showOrderedPosts('dashboard')">Home</a></li><!--return to regular post view-->
+            <li><a href="#" onclick="showOrderedPosts('popular')">Popular</a></li>  <!--posts with the highest like count--> 
+            <li><a href="#" onclick="showOrderedPosts('Recent')">Recent</a></li><!--most recernt post ordering. default?-->
+            <li><a href="#" onclick="showOrderedPosts('Controversial')">Controversial</a></li><!--order posts based on hight dislike count-->
         </ul>
     </div>
 
     <!-- Dark Mode Toggle -->
-    <button class="dark-mode-toggle">Toggle Dark Mode</button>
+    <button class="dark-mode-toggle">Dark Mode</button>
 
-    <script src="{% static 'js/script.js' %}"></script>
     <script type="text/javascript">
-        var currentUser = "{{ user.username }}";
+        var currentUser = "{{ user.username }}"; //pass the user name to the script.js
     </script>
+    <script src="{% static 'js/script.js' %}"></script>
+
     
 </body>
 </html>

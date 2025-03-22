@@ -26,8 +26,8 @@ from django.http import HttpResponse
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('accounts.urls')),
-    path('posts/', include('posts.urls')),  # Ensure this points to the posts app
-    path('', views.signup_view, name='home'),  # Home page that uses the signup view
-    path('create/', post_views.create_post, name='create_post'),  # Create post view
+    path('posts/', include('posts.urls')),  
+    path('', views.signup_view, name='home'), 
+    path('create/', post_views.create_post, name='create_post'), 
     path('favicon.ico', lambda x: HttpResponse(status=204)),
 ]

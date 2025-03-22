@@ -1,14 +1,16 @@
 document.addEventListener('DOMContentLoaded', function () {
+        
+    // Get the "Post" button and add a click event listener to it
     const postButton = document.getElementById('post-button');
     if (postButton) {
         postButton.addEventListener('click', addPost);
     }
-
+    // Get the hamburger menu and add a click event listener to toggle the menu
     const hamburger = document.querySelector('.sidebar-menu');
     if (hamburger) {
         hamburger.addEventListener('click', toggleMenu);
     }
-
+    // Get the dark mode toggle button and add a click event listener to enable/disable dark mode
     const darkModeToggle = document.querySelector('.dark-mode-toggle');
     if (darkModeToggle) {
         darkModeToggle.addEventListener('click', toggleDarkMode);
@@ -21,6 +23,7 @@ document.addEventListener('DOMContentLoaded', function () {
             showPage(targetPage);
         });
     });
+    
 
     const postsContainer = document.getElementById('posts-container');
     if (postsContainer) {
@@ -35,7 +38,13 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
+    renderSentimentBar();
+
+    // Load general posts
     loadPosts();
+
+    // Load opposing views posts
+    loadOpposingViewsPosts(); // Ensures the posts are added to the specific container
 });
 function getCsrfToken() {
     const cookies = document.cookie.split(';');
@@ -48,20 +57,15 @@ function getCsrfToken() {
     return '';
 }
 function toggleMenu() {
+    const body = document.body;
     const sidebar = document.getElementById('sidebar-menu');
+    
+    // show/hide the sidebar and shift dashboard content to avoid overlap
+    body.classList.toggle('sidebar-active');
     sidebar.classList.toggle('active');
 }
 function toggleDarkMode() {
     document.body.classList.toggle('dark-mode');
-}
-function showPage(pageId) {
-    const pages = document.querySelectorAll('.page');
-    pages.forEach(page => page.classList.remove('active'));
-
-    const activePage = document.getElementById(pageId);
-    if (activePage) {
-        activePage.classList.add('active');
-    }
 }
 async function addPost(event) {
     event.preventDefault();
@@ -114,15 +118,20 @@ async function loadPosts() {
         const posts = await response.json();
         const postsContainer = document.getElementById('posts-container');
 
+        // Loop through each post and add to the DOM
         posts.posts.forEach(post => {
-            addPostToDOM(post, true);
+            addPostToDOM(post);  // Add comments directly if they are included
         });
     } catch (error) {
         console.error('Error fetching posts:', error);
     }
 }
-function addPostToDOM(post, preload = false) {
-    const postsContainer = document.getElementById('posts-container');
+function addPostToDOM(post, preload = false, containerId = 'posts-container') {
+    const postsContainer = document.getElementById(containerId);
+    if (!postsContainer) {
+        console.error(`Container with ID '${containerId}' not found.`);
+        return;
+    }
 
     const postElement = document.createElement('div');
     postElement.classList.add('post-box');
@@ -132,7 +141,8 @@ function addPostToDOM(post, preload = false) {
     commentSection.classList.add('comment-section');
     commentSection.style.display = 'none';
 
-    if (preload && post.comments) {
+    // Preload comments if available
+    if (post.comments && post.comments.length > 0) {
         post.comments.forEach(comment => {
             const commentElement = document.createElement('div');
             commentElement.classList.add('comment');
@@ -178,6 +188,7 @@ function addPostToDOM(post, preload = false) {
 
     postsContainer.appendChild(postElement);
 }
+
 function commentPost(button) {
     const postBox = button.closest('.post-box');
     const postId = postBox.dataset.postId;
@@ -372,3 +383,150 @@ async function updateLikeStatus(postId, action) {
         alert('An error occurred. Please try again later.');
     }
 }
+//initialise before use
+var currentUser = currentUser;
+
+async function renderSentimentBar() {
+    try {
+        const response = await fetch('/posts/get-sentiment-data/');
+        if (!response.ok) {
+            throw new Error('Failed to fetch sentiment data');
+        }
+
+        const data = await response.json();
+
+        // Find the current user's sentiment data
+        const userSentiment = data.users_data.find(user => user.user === currentUser);
+
+        if (!userSentiment) {
+            console.error('Current user sentiment data was not found.');
+            return;
+        }
+        //default 0
+        const positive = userSentiment.positive_percentage || 0;
+        const neutral = userSentiment.neutral_percentage || 0;
+        const negative = userSentiment.negative_percentage || 0;
+
+        // Calculate total width of each colour in the sentiment bar. the width will equal the total percentage of each sentiment
+        const totalSentiment = positive + neutral + negative;
+        const positiveWidth = (positive / totalSentiment) * 100;
+        const neutralWidth = (neutral / totalSentiment) * 100;
+        const negativeWidth = (negative / totalSentiment) * 100;
+
+        // Set up the sentiment bar and clear any existing content
+        const sentimentBar = document.getElementById('sentiment-bar');
+        sentimentBar.innerHTML = '';
+
+        // Create divs for each sentiment section
+        const positiveSection = document.createElement('div');
+        positiveSection.style.width = positiveWidth + '%';
+        positiveSection.classList.add('sentiment-section', 'positive');
+        positiveSection.textContent = `Positive`;
+
+        const neutralSection = document.createElement('div');
+        neutralSection.style.width = neutralWidth + '%';
+        neutralSection.classList.add('sentiment-section', 'neutral');
+        neutralSection.textContent = `Neutral`;
+
+        const negativeSection = document.createElement('div');
+        negativeSection.style.width = negativeWidth + '%';
+        negativeSection.classList.add('sentiment-section', 'negative');
+        negativeSection.textContent = `Negative`;
+
+        // Append the sections to the sentiment bar
+        sentimentBar.appendChild(positiveSection);
+        sentimentBar.appendChild(neutralSection);
+        sentimentBar.appendChild(negativeSection);
+
+    } catch (error) {
+        console.error('Could not fetching sentiment data:', error);
+        alert('Failed to load sentiment data.');
+    }
+}
+async function loadOpposingViewsPosts() {
+    try {
+        // Fetch sentiment data for the current user
+        const sentimentResponse = await fetch('/posts/get-sentiment-data/');
+        if (!sentimentResponse.ok) {
+            throw new Error('Failed to fetch sentiment data');
+        }
+        const sentimentData = await sentimentResponse.json();
+
+        // Determine user's sentiment and find opposing sentiment
+        const userSentiment = sentimentData.users_data.find(user => user.user === currentUser);
+        if (!userSentiment) {
+            console.error('Current user sentiment data not found.');
+            return;
+        }
+        let opposingSentiment;
+        if (userSentiment.positive_percentage > userSentiment.negative_percentage) {
+            opposingSentiment = 'positive';
+        } else if (userSentiment.negative_percentage > userSentiment.positive_percentage) {
+            opposingSentiment = 'negative';
+        } else {
+            opposingSentiment = 'neutral';
+        }
+
+        // Fetch posts with the opposing sentiment
+        const postsResponse = await fetch(`/posts/get-opposing-posts/${opposingSentiment}/`);
+        if (!postsResponse.ok) {
+            throw new Error('Failed to fetch opposing posts');
+        }
+        const posts = await postsResponse.json();
+
+        const opposingPostsContainer = document.getElementById('opposing-posts-container');
+        if (!opposingPostsContainer) {
+            console.error('Opposing posts container not found.');
+            return;
+        }
+
+        // Clear the container and add new posts
+        opposingPostsContainer.innerHTML = '';
+        posts.posts.forEach(post => {
+            addPostToDOM(post, true, 'opposing-posts-container'); // Ensure correct container
+        });
+
+        // Handle cases where no opposing poss are found
+        if (posts.posts.length === 0) {
+            opposingPostsContainer.innerHTML = '<p>No opposing views posts available at the moment.</p>';
+        }
+    } catch (error) {
+        console.error('Error fetching opposing posts:', error);
+        alert('Failed to load opposing posts.');
+    }
+}
+function showPage(pageId) {
+    const pages = document.querySelectorAll('.page');
+    pages.forEach(page => page.classList.remove('active'));
+
+    const activePage = document.getElementById(pageId);
+    if (activePage) {
+        activePage.classList.add('active');
+    } else {
+        console.error('Page not found:', pageId);
+    }
+}
+function showOrderedPosts(orderType) {
+ 
+    // Clear the posts container
+    const postsContainer = document.getElementById('posts-container');
+    postsContainer.innerHTML = '';
+
+    // Fetch ordered posts from the backend
+    fetch(`/posts/get-ordered-posts/${orderType.toLowerCase()}/`)
+        .then(response => {
+            if (!response.ok) throw new Error('Failed to fetch posts.');
+            return response.json();
+        })
+        .then(data => {
+            data.posts.forEach(post => {
+                addPostToDOM(post); 
+            });
+
+            if (data.posts.length === 0) {
+                postsContainer.innerHTML = '<p>No posts available for this order.</p>';
+            }
+        })
+        .catch(error => console.error('Error fetching posts:', error));
+}
+
